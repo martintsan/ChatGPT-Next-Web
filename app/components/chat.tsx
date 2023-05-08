@@ -223,6 +223,7 @@ function useSubmitHandler() {
 export function PromptHints(props: {
   prompts: Prompt[];
   onPromptSelect: (prompt: Prompt) => void;
+  hidePromptHint: () => void;
 }) {
   const noPrompts = props.prompts.length === 0;
   const [selectIndex, setSelectIndex] = useState(0);
@@ -259,6 +260,8 @@ export function PromptHints(props: {
         if (selectedPrompt) {
           props.onPromptSelect(selectedPrompt);
         }
+      } else if (e.key === "Escape") {
+        props.hidePromptHint();
       }
     };
 
@@ -437,6 +440,10 @@ export function Chat() {
     setPromptHints([]);
     inputRef.current?.focus();
     setTimeout(() => setUserInput(prompt.content), 60);
+  };
+
+  const hidePromptHint = () => {
+    setPromptHints([]);
   };
 
   // auto grow input
@@ -787,7 +794,11 @@ export function Chat() {
       </div>
 
       <div className={styles["chat-input-panel"]}>
-        <PromptHints prompts={promptHints} onPromptSelect={onPromptSelect} />
+        <PromptHints
+          prompts={promptHints}
+          onPromptSelect={onPromptSelect}
+          hidePromptHint={hidePromptHint}
+        />
 
         <ChatActions
           showPromptModal={() => setShowPromptModal(true)}
